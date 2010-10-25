@@ -212,9 +212,9 @@ end -- MI2_UpdateTooltipHealth
 -- client. This handler starts and stope moving the tooltip along with the
 -- mouse, and also handles tooltip fadeout.
 --
-function MI2_TooltipOnUpdate( time )
+function MI2_TooltipOnUpdate(self, elapsed )
 	-- half second action ticker : use it to update health/mana in tooltip
-	MI2_Tick = MI2_Tick + time
+	MI2_Tick = MI2_Tick + elapsed
 	if MI2_Tick > 0.5 then
 		MI2_Tick = 0
 		MI2_UpdateTooltipHealth()
@@ -230,7 +230,7 @@ function MI2_TooltipOnUpdate( time )
 			MI2_IsMoving = 2
 		end
 	elseif  MI2_HideTimer < 4.0 then
-		MI2_HideTimer = MI2_HideTimer - time
+		MI2_HideTimer = MI2_HideTimer - elapsed
 		if  MI2_HideTimer < 1.0 then
 			MI2_TooltipFrame:SetAlpha( MI2_HideTimer )
 			if MI2_HideTimer < 0.1 then

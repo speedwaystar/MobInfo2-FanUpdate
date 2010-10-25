@@ -90,7 +90,7 @@
 					<Offset>
 						<AbsDimension x="-5" y="-40"/></Offset></Anchor></Anchors>
 			<Scripts>
-				<OnLoad>this:SetBackdropColor(0,0,0)</OnLoad>
+				<OnLoad>self:SetBackdropColor(0,0,0)</OnLoad>
 			</Scripts>
 			<Layers>
 				<Layer level="BACKGROUND">

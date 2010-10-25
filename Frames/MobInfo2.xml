@@ -2,8 +2,8 @@
 	<Include file="MI2_Templates.xml" />
 	<Frame name="MI2_MobInfoFrame">
 		<Scripts>
-			<OnLoad>MI2_OnLoad()</OnLoad>
-			<OnEvent>MI2_OnEvent(event);</OnEvent></Scripts></Frame>
+			<OnLoad>MI2_OnLoad(self)</OnLoad>
+			<OnEvent function="MI2_OnEvent"/></Scripts></Frame>
 	<Frame name="MI2_MobHealthFrame" toplevel="true" frameStrata="LOW" movable="true" enableMouse="true" parent="TargetFrame">
 		<Size>
 			<AbsDimension x="128" y="32"/></Size>

@@ -49,8 +49,8 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnEnter> getglobal(this:GetName().."Highlight"):Show() MI2_ShowSearchResultTooltip() </OnEnter>
-			<OnLeave> getglobal(this:GetName().."Highlight"):Hide() MI2_HideSearchResultTooltip() </OnLeave> 
+			<OnEnter> getglobal(self:GetName().."Highlight"):Show() MI2_ShowSearchResultTooltip(self) </OnEnter>
+			<OnLeave> getglobal(self:GetName().."Highlight"):Hide() MI2_HideSearchResultTooltip(self) </OnLeave> 
 		</Scripts>
 		<NormalText name="$parentNormalText" inherits="GameFontNormalSmall" justifyH="LEFT"/>
 	</Button>
@@ -72,7 +72,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad> getglobal(this:GetName().."Title"):SetText(MI2_FRAME_TEXTS[this:GetName()]) </OnLoad>
+			<OnLoad> getglobal(self:GetName().."Title"):SetText(MI2_FRAME_TEXTS[self:GetName()]) </OnLoad>
 		</Scripts>
 	</Frame>
 
@@ -83,16 +83,16 @@
 		<Size> <AbsDimension x="20"	y="20" /> </Size>
 		<HitRectInsets>	<AbsInset left="0" right="-20"	top="0"	bottom="0"/> </HitRectInsets>
 		<Scripts>
-			<OnLoad> local opt=MI2_OPTIONS[this:GetName()] getglobal(this:GetName().."Text"):SetText(opt.opt or opt.text) </OnLoad>
-			<OnClick> MI2_SlashParse(this:GetName()) </OnClick>
-			<OnEnter> MI2_ShowOptionHelpTooltip() </OnEnter>
+			<OnLoad> local opt=MI2_OPTIONS[self:GetName()] getglobal(self:GetName().."Text"):SetText(opt.opt or opt.text) </OnLoad>
+			<OnClick> MI2_SlashParse(self:GetName()) </OnClick>
+			<OnEnter> MI2_ShowOptionHelpTooltip(self) </OnEnter>
 			<OnLeave> GameTooltip:Hide() </OnLeave>
 		</Scripts>
 	</CheckButton>
 	<CheckButton name="MI2_BigCheckboxTemplate" inherits="MI2_CheckboxTemplate" virtual="true">
 		<Scripts>
-			<OnLoad>  getglobal(this:GetName().."Text"):SetText(MI2_OPTIONS[this:GetName()].text)
-			this:SetScale( 1.2 ) </OnLoad>
+			<OnLoad>  getglobal(self:GetName().."Text"):SetText(MI2_OPTIONS[self:GetName()].text)
+			self:SetScale( 1.2 ) </OnLoad>
 		</Scripts>
 	</CheckButton>
 
@@ -102,9 +102,9 @@
 		<Size> <AbsDimension x="24"	y="24" /> </Size>
 		<HitRectInsets>	<AbsInset left="0" right="-40"	top="0"	bottom="0"/> </HitRectInsets>
 		<Scripts>
-			<OnLoad>  getglobal(this:GetName().."Text"):SetText(MI2_OPTIONS[this:GetName()].text) </OnLoad>
-			<OnClick> MI2_SearchCheckboxClicked()	</OnClick>
-			<OnEnter> MI2_ShowOptionHelpTooltip() </OnEnter>
+			<OnLoad>  getglobal(self:GetName().."Text"):SetText(MI2_OPTIONS[self:GetName()].text) </OnLoad>
+			<OnClick> MI2_SearchCheckboxClicked(self)	</OnClick>
+			<OnEnter> MI2_ShowOptionHelpTooltip(self) </OnEnter>
 			<OnLeave> GameTooltip:Hide() </OnLeave>
 		</Scripts>
 	</CheckButton>
@@ -115,9 +115,9 @@
 	<Button	name="MI2_PushButtonTemplate" inherits="OptionsButtonTemplate" virtual="true">
 		<Size> <AbsDimension x="100" y="22"/> </Size>
 		<Scripts>
-			<OnLoad>  getglobal(this:GetName()):SetText(MI2_OPTIONS[this:GetName()].text) </OnLoad>
-			<OnClick> MI2_SlashParse(this:GetName()) </OnClick>
-			<OnEnter> MI2_ShowOptionHelpTooltip() </OnEnter>
+			<OnLoad>  getglobal(self:GetName()):SetText(MI2_OPTIONS[self:GetName()].text) </OnLoad>
+			<OnClick> MI2_SlashParse(self:GetName()) </OnClick>
+			<OnEnter> MI2_ShowOptionHelpTooltip(self) </OnEnter>
 			<OnLeave> GameTooltip:Hide() </OnLeave>
 		</Scripts>
 	</Button>
@@ -139,18 +139,18 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>  
-				getglobal(this:GetName().."Text"):SetText(MI2_OPTIONS[this:GetName()].text); 
-				getglobal(this:GetName().."Low"):Hide();
-				getglobal(this:GetName().."High"):Hide();
-				this:SetValueStep( 1 );
-				MI2_OPTIONS[this:GetName()].val = 1
+				getglobal(self:GetName().."Text"):SetText(MI2_OPTIONS[self:GetName()].text); 
+				getglobal(self:GetName().."Low"):Hide();
+				getglobal(self:GetName().."High"):Hide();
+				self:SetValueStep( 1 );
+				MI2_OPTIONS[self:GetName()].val = 1
 			</OnLoad>
-			<OnEnter> MI2_ShowOptionHelpTooltip(); </OnEnter>
+			<OnEnter> MI2_ShowOptionHelpTooltip(self); </OnEnter>
 			<OnLeave> GameTooltip:Hide(); </OnLeave>
 			<OnValueChanged> 
-				MI2_SlashParse(this:GetName().." "..math.floor(this:GetValue()))
-				local valTxtFrame = getglobal( this:GetName().."ValueText" )
-				valTxtFrame:SetText( tostring(math.floor(this:GetValue())) )
+				MI2_SlashParse(self:GetName().." "..math.floor(self:GetValue()))
+				local valTxtFrame = getglobal( self:GetName().."ValueText" )
+				valTxtFrame:SetText( tostring(math.floor(self:GetValue())) )
 			</OnValueChanged>
 		</Scripts>
 	</Slider>
@@ -170,12 +170,12 @@
 		<Scripts>
 			<OnLoad>
 				UIDropDownMenu_SetWidth(self, 120 )
-				getglobal(this:GetName().."Title"):SetText( MI2_OPTIONS[this:GetName()].text )
-				UIDropDownMenu_Initialize( this, MI2_DropDown_Initialize )
-				MI2_OPTIONS[this:GetName()].dd = 1
+				getglobal(self:GetName().."Title"):SetText( MI2_OPTIONS[self:GetName()].text )
+				UIDropDownMenu_Initialize( self, MI2_DropDown_Initialize )
+				MI2_OPTIONS[self:GetName()].dd = 1
 			</OnLoad>
 			<OnShow> MI2_DropDown_OnShow(self) </OnShow>
-			<OnEnter> MI2_ShowOptionHelpTooltip() </OnEnter>
+			<OnEnter> MI2_ShowOptionHelpTooltip(self) </OnEnter>
 			<OnLeave> GameTooltip:Hide() </OnLeave>
 		</Scripts>
 	</Button>
@@ -195,10 +195,10 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnEnterPressed>	this:ClearFocus();	</OnEnterPressed>
-			<OnEscapePressed>	this:ClearFocus();	</OnEscapePressed>
-			<OnLoad>	getglobal(this:GetName().."Desc"):SetText(MI2_OPTIONS[this:GetName()].text); </OnLoad>
-			<OnEnter>	MI2_ShowOptionHelpTooltip(); </OnEnter>
+			<OnEnterPressed>	self:ClearFocus();	</OnEnterPressed>
+			<OnEscapePressed>	self:ClearFocus();	</OnEscapePressed>
+			<OnLoad>	getglobal(self:GetName().."Desc"):SetText(MI2_OPTIONS[self:GetName()].text); </OnLoad>
+			<OnEnter>	MI2_ShowOptionHelpTooltip(self); </OnEnter>
 			<OnLeave>	GameTooltip:Hide();			</OnLeave>
 		</Scripts>
 	</EditBox>
@@ -208,7 +208,7 @@
 	<!-- the edit box is prefixed with a description text			  -->
 	<EditBox name="MI2_ValueEditBox_Template" letters="2" numeric="true" inherits="MI2_EditBox_Template" virtual="true">
 		<Scripts>
-			<OnTextChanged>	MI2_SearchValueChanged(); </OnTextChanged>
+			<OnTextChanged>	MI2_SearchValueChanged(self); </OnTextChanged>
 		</Scripts>
 	</EditBox>
 
@@ -218,7 +218,7 @@
 	<EditBox name="MI2_TextEditBox_Template" letters="28" inherits="MI2_EditBox_Template" virtual="true">
 		<Size> <AbsDimension x="135" y="24"/> </Size>
 		<Scripts>
-			<OnTextChanged>	MI2_SearchTextChanged() </OnTextChanged>
+			<OnTextChanged>	MI2_SearchTextChanged(self) </OnTextChanged>
 		</Scripts>
 	</EditBox>
 
@@ -228,12 +228,12 @@
 	<EditBox name="MI2_OptionsEditBox_Template" letters="28" inherits="MI2_EditBox_Template" virtual="true">
 		<Scripts>
 			<OnLoad>
-				getglobal(this:GetName().."Desc"):ClearAllPoints()
-				getglobal(this:GetName().."Desc"):SetPoint( "TOPLEFT", 0, 10 )
-				getglobal(this:GetName().."Desc"):SetText(MI2_OPTIONS[this:GetName()].text)
-				MI2_OPTIONS[this:GetName()].txt = 1
+				getglobal(self:GetName().."Desc"):ClearAllPoints()
+				getglobal(self:GetName().."Desc"):SetPoint( "TOPLEFT", 0, 10 )
+				getglobal(self:GetName().."Desc"):SetText(MI2_OPTIONS[self:GetName()].text)
+				MI2_OPTIONS[self:GetName()].txt = 1
 			</OnLoad>
-			<OnTextChanged>	MI2_SlashParse(this:GetName().." "..this:GetText()) </OnTextChanged>
+			<OnTextChanged>	MI2_SlashParse(self:GetName().." "..self:GetText()) </OnTextChanged>
 		</Scripts>
 	</EditBox>
 
@@ -243,7 +243,7 @@
 	<Button	name="MI2_TabButtonTemplate" inherits="TabButtonTemplate" virtual="true">
 		<Scripts>
 			<OnClick> MI2_TabButton_OnClick( self	)</OnClick>
-			<OnEnter> MI2_ShowOptionHelpTooltip(); </OnEnter>
+			<OnEnter> MI2_ShowOptionHelpTooltip(self); </OnEnter>
 			<OnLeave> GameTooltip:Hide(); </OnLeave>
 			<OnLoad>  
 				getglobal(self:GetName()):SetText(MI2_OPTIONS[self:GetName()].text);

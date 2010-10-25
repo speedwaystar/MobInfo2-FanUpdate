@@ -134,7 +134,7 @@ end -- MI2_SearchOptionsOnShow()
 -- Validate all values and update colors accordingly.
 -- Allow Search only if all search options are valid.
 --
-local function MI2_ValidateSearchOptions()
+local function MI2_ValidateSearchOptions(this)
 	if MI2_SearchOptions.MinLevel < 1 then
 		MI2_SearchOptions.MinLevel = 1
 		if this:GetText() == "0" then
@@ -156,7 +156,7 @@ end -- MI2_ValidateSearchOptions()
 -- OnClicked event handler for checkboxes on search options page
 -- Store the checkbox state in the corresponding search options variable.
 --
-function MI2_SearchCheckboxClicked()
+function MI2_SearchCheckboxClicked(this)
 	local checkboxName = this:GetName()
 	local optionName = string.sub( checkboxName, 14 )
 	local optionValue = this:GetChecked() or 0
@@ -174,7 +174,7 @@ end -- MI2_SearchCheckboxClicked()
 -- It gets the new value and stores it in the corresponding search options
 -- variable
 --
-function MI2_SearchValueChanged()
+function MI2_SearchValueChanged(this)
 	local editboxName = this:GetName()
 	local optionName = string.sub( editboxName, 14 )
 	local optionValue = tonumber(this:GetText()) or 0
@@ -195,7 +195,7 @@ end -- MI2_SearchValueChanged()
 -- It gets the new value and stores it in the corresponding search options
 -- variable
 --
-function MI2_SearchTextChanged()
+function MI2_SearchTextChanged(this)
 	local editboxName = this:GetName()
 	local optionName = string.sub( editboxName, 14 )
 
@@ -370,7 +370,7 @@ end -- end of MI2_SearchResult_Update()
 --
 -- Show mob tooltip for search result mob currently under mouse cursor.
 --
-function MI2_ShowSearchResultTooltip()
+function MI2_ShowSearchResultTooltip(this)
 	local sliderPos = FauxScrollFrame_GetOffset(MI2_SearchResultSlider)
 	local selection = tonumber(string.sub(this:GetName(), 17)) + sliderPos
 	  

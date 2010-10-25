@@ -122,7 +122,7 @@
 			<OnLoad>MI2_OptionsFrameOnLoad()</OnLoad>
 			<OnShow>MI2_OptionsFrameOnShow()</OnShow>
 			<OnHide>MI2_TooltipAnchor:SetFrameStrata( "LOW" ) MI2_UpdateAnchor()</OnHide>
-			<OnMouseDown>miConfig_OnMouseDown()</OnMouseDown>
-			<OnMouseUp>miConfig_OnMouseUp()</OnMouseUp>
+			<OnMouseDown>miConfig_OnMouseDown(self)</OnMouseDown>
+			<OnMouseUp>miConfig_OnMouseUp(self)</OnMouseUp>
 		</Scripts>
 	</Frame></Ui>

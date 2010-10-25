@@ -90,7 +90,7 @@ end  -- MI2_UpdateOptions()
 -- Show help text for current hovered option in options dialog
 -- in the game tooltip window.
 --
-function MI2_ShowOptionHelpTooltip()
+function MI2_ShowOptionHelpTooltip(this)
 	GameTooltip_SetDefaultAnchor( GameTooltip, UIParent )
 	GameTooltip:SetText( MI_White..MI2_OPTIONS[this:GetName()].text )
 	  
@@ -115,14 +115,14 @@ function MI2_OptionsFrameOnShow()
 end  -- MI2_OptionsFrameOnShow()
 
 
-function miConfig_OnMouseDown()
+function miConfig_OnMouseDown(this)
 	if arg1 == "LeftButton" then
 		this:StartMoving()
 	end
 end
 
 
-function miConfig_OnMouseUp()
+function miConfig_OnMouseUp(this)
 	if arg1 == "LeftButton" then
 		this:StopMovingOrSizing()
 	end
@@ -183,12 +183,12 @@ end
 
 
 -----------------------------------------------------------------------------
--- MI2_OptTargetFont_OnClick()
+-- MI2_OptTargetFont_OnClick(this)
 --
 -- Event handler: one of the choices in the font selection box has been
 -- clicked. Store it as a config option.
 --
-function MI2_OptTargetFont_OnClick()
+function MI2_OptTargetFont_OnClick(this)
 	local oldID = UIDropDownMenu_GetSelectedID( MI2_OptTargetFont )
 	UIDropDownMenu_SetSelectedID( MI2_OptTargetFont, this:GetID())
 	if  oldID ~= this:GetID()  then
@@ -204,7 +204,7 @@ end  -- MI2_OptTargetFont_OnClick()
 -- Event handler: one of the choices in the items quality dropdown has been
 -- clicked. Store it as a config option.
 --
-function MI2_OptItemsQuality_OnClick()
+function MI2_OptItemsQuality_OnClick(this)
 	local oldID = UIDropDownMenu_GetSelectedID( MI2_OptItemsQuality )
 	UIDropDownMenu_SetSelectedID( MI2_OptItemsQuality, this:GetID())
 	if  oldID ~= this:GetID()  then
@@ -219,7 +219,7 @@ end  -- MI2_OptItemsQuality_OnClick()
 -- Event handler: one of the choices in the tooltip mode dropdown has been
 -- clicked. Store it as a config option.
 --
-function MI2_OptTooltipMode_OnClick()
+function MI2_OptTooltipMode_OnClick(this)
 	local oldID = UIDropDownMenu_GetSelectedID( MI2_OptTooltipMode )
 	UIDropDownMenu_SetSelectedID( MI2_OptTooltipMode, this:GetID())
 	if  oldID ~= this:GetID()  then
@@ -235,7 +235,7 @@ end  -- MI2_OptTooltipMode_OnClick()
 -- Initialize a dropdown list with entries that are retrieved from the
 -- localization info.
 --
-function MI2_DropDown_Initialize()
+function MI2_DropDown_Initialize(this)
 	if string.sub(this:GetName(),-6) ~= "Button" then return end
 	
 	local dropDownName = string.sub(this:GetName(),1,-7)

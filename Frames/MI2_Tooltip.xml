@@ -36,9 +36,9 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>this:RegisterForDrag("LeftButton")</OnLoad>
-			<OnDragStart>this:StartMoving()</OnDragStart>
-			<OnDragStop>this:StopMovingOrSizing()</OnDragStop>
+			<OnLoad>self:RegisterForDrag("LeftButton")</OnLoad>
+			<OnDragStart>self:StartMoving()</OnDragStart>
+			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
 			<OnEnter>MI2_TooltipAnchorOnEnter()</OnEnter>
 			<OnLeave>MI2_TooltipAnchorOnLeave()</OnLeave>
 		</Scripts>
@@ -239,8 +239,8 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>this:RegisterEvent("UPDATE_MOUSEOVER_UNIT")</OnLoad>
-			<OnUpdate>MI2_TooltipOnUpdate(arg1)</OnUpdate>
+			<OnLoad>self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")</OnLoad>
+			<OnUpdate>MI2_TooltipOnUpdate(self, elapsed)</OnUpdate>
 			<OnEvent>MI2_TooltipMouseoverUnit( 5.0 )</OnEvent>
 		</Scripts>
 	</Frame>

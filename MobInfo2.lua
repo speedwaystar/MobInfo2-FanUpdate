@@ -2182,7 +2182,7 @@ function MI2_ScanSpellbook()
 		local pageName, texture, offset, numSpells = GetSpellTabInfo( spellBookPage )
 		if pageName and offset and numSpells then
 			for spellIndex = (offset+1), (offset + numSpells) do
-				local spellName = GetSpellName( spellIndex, BOOKTYPE_SPELL )
+				local spellName, spellSubName = GetSpellBookItemName( spellIndex, BOOKTYPE_SPELL )
 				if spellName and (not string.find(spellName,":")) then
 					for school in pairs(MI2_SpellSchools) do
 						local schoolOK = string.find( pageName, school )
