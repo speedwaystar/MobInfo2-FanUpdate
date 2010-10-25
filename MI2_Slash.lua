@@ -183,8 +183,8 @@ end  -- MI2_Slash_ClearDbConfirmed()
 -- Clear entire contents of MobInfo and MobHealth databases.
 -- Ask for confirmation before performing the clear operation.
 --
-function MI2_SlashAction_ClearHealthDb(this)
-	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS[this:GetName()].help.."' ?"
+function MI2_SlashAction_ClearHealthDb()
+	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS["MI2_OptClearHealthDb"].help.."' ?"
 	StaticPopupDialogs["MOBINFO_CONFIRMATION"].OnAccept = MI2_Slash_ClearDbConfirmed
 	MI2_DeleteMode = "HealthDb"
 	local dialog = StaticPopup_Show( "MOBINFO_CONFIRMATION", "")
@@ -197,8 +197,8 @@ end  -- MI2_SlashAction_ClearHealthDb()
 -- Clear entire contents of MobInfo and MobHealth databases.
 -- Ask for confirmation before performing the clear operation.
 --
-function MI2_SlashAction_ClearPlayerDb(this)
-	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS[this:GetName()].help.."' ?"
+function MI2_SlashAction_ClearPlayerDb()
+	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS["MI2_OptClearPlayerDb"].help.."' ?"
 	StaticPopupDialogs["MOBINFO_CONFIRMATION"].OnAccept = MI2_Slash_ClearDbConfirmed
 	MI2_DeleteMode = "PlayerDb"
 	local dialog = StaticPopup_Show( "MOBINFO_CONFIRMATION", "")
@@ -211,8 +211,8 @@ end  -- MI2_SlashAction_ClearPlayerDb()
 -- Clear entire contents of MobInfo and MobHealth databases.
 -- Ask for confirmation before performing the clear operation.
 --
-function MI2_SlashAction_ClearMobDb(this)
-	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS[this:GetName()].help.."' ?"
+function MI2_SlashAction_ClearMobDb()
+	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS["MI2_OptClearMobDb"].help.."' ?"
 	StaticPopupDialogs["MOBINFO_CONFIRMATION"].OnAccept = MI2_Slash_ClearDbConfirmed
 	MI2_DeleteMode = "MobDb"
 	local dialog = StaticPopup_Show( "MOBINFO_CONFIRMATION", "")

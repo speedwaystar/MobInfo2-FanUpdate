@@ -1,4 +1,4 @@
---
+﻿--
 -- MobInfo.lua
 --
 -- Main module of MobInfo-2 AddOn
@@ -1195,7 +1195,7 @@ function MI2_RecordKill( creatureName, xp )
 			end
 		end
 	end
-
+	
 	if MobInfoConfig.SaveCharData == 1 and mobIndex then
 		local mobData = MI2_FetchMobData( mobIndex )
 		if xp then

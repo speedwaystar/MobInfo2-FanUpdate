@@ -129,7 +129,7 @@ function miConfig_OnMouseUp(this)
 end
 
 
-function MI2_DoneButton_OnClick()
+function MI2_DoneButton_OnClick(this)
 	HideUIPanel(MI2_OptionsFrame)
 	if MYADDONS_ACTIVE_OPTIONSFRAME then
 		if (MYADDONS_ACTIVE_OPTIONSFRAME == this) then

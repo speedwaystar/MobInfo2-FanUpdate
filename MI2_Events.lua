@@ -44,7 +44,7 @@ end  -- MI2_CheckForSeparateMobHealth
 -- main global initialization function, this is called as the handler
 -- for the "VARIABLES_LOADED" event
 --
-local function MI2_VariablesLoaded(this)
+local function MI2_VariablesLoaded()
 	-- initialize "MobInfoConfig" data structure (main MobInfo config options)
 	MI2_InitOptions()
 
@@ -100,7 +100,7 @@ local function MI2_VariablesLoaded(this)
 	MI2_SpellSchools = newSchools
 
 	-- from this point onward process events
-	MI2_InitializeEventTable(this)
+	MI2_InitializeEventTable()
 
 	MI2_UpdateOptions()
 	MI2_InitializeTooltip()
@@ -656,7 +656,7 @@ end -- MI2_OnTooltipSetItem()
 -- needed for the current MobInfo recording options. The general rule is
 -- that we only register events if we want to record the data of the event.
 --
-function MI2_InitializeEventTable(this)
+function MI2_InitializeEventTable()
 	-- reset all events to their always on flag state
 	for eventName, eventInfo in pairs(MI2_EventHandlers) do
 		local eventEnabled = eventInfo.always or MobInfoConfig.SaveBasicInfo == 1 
@@ -689,11 +689,11 @@ end -- MI2_OnEvent
 -- MobInfo main event handler function, gets called for all registered events
 -- uses table with event handler info
 --
-function MI2_OnCombatLogEvent()	
+function MI2_OnCombatLogEvent(self, event, ...)	
 	--midebug("event="..event..", a1="..(arg1 or "<nil>")..", a2="..(arg2 or "<nil>")..", a3="..(arg3 or "<nil>")..", a4="..(arg4 or "<nil>"))
 	local realEvent = MI2_EventHandlers[event]
 	if realEvent then
-		realEvent.f()
+		realEvent.f(...)
 	end
 end -- MI2_OnCombatLogEvent
 
