@@ -90,13 +90,13 @@ end  -- MI2_UpdateOptions()
 -- Show help text for current hovered option in options dialog
 -- in the game tooltip window.
 --
-function MI2_ShowOptionHelpTooltip(this)
+function MI2_ShowOptionHelpTooltip(frame)
 	GameTooltip_SetDefaultAnchor( GameTooltip, UIParent )
-	GameTooltip:SetText( MI_White..MI2_OPTIONS[this:GetName()].text )
+	GameTooltip:SetText( MI_White..MI2_OPTIONS[frame:GetName()].text )
 	  
-	GameTooltip:AddLine(MI_Gold..MI2_OPTIONS[this:GetName()].help)
-	if MI2_OPTIONS[this:GetName()].info then
-		GameTooltip:AddLine(MI_Gold..MI2_OPTIONS[this:GetName()].info)
+	GameTooltip:AddLine(MI_Gold..MI2_OPTIONS[frame:GetName()].help)
+	if MI2_OPTIONS[frame:GetName()].info then
+		GameTooltip:AddLine(MI_Gold..MI2_OPTIONS[frame:GetName()].info)
 	end
 	GameTooltip:Show()
 end -- of MI2_ShowOptionHelpTooltip()
@@ -115,24 +115,24 @@ function MI2_OptionsFrameOnShow()
 end  -- MI2_OptionsFrameOnShow()
 
 
-function miConfig_OnMouseDown(this)
-	if arg1 == "LeftButton" then
-		this:StartMoving()
+function miConfig_OnMouseDown(frame,button)
+	if button == "LeftButton" then
+		frame:StartMoving()
 	end
 end
 
 
-function miConfig_OnMouseUp(this)
-	if arg1 == "LeftButton" then
-		this:StopMovingOrSizing()
+function miConfig_OnMouseUp(frame,button)
+	if button == "LeftButton" then
+		frame:StopMovingOrSizing()
 	end
 end
 
 
-function MI2_DoneButton_OnClick(this)
+function MI2_DoneButton_OnClick(frame)
 	HideUIPanel(MI2_OptionsFrame)
 	if MYADDONS_ACTIVE_OPTIONSFRAME then
-		if (MYADDONS_ACTIVE_OPTIONSFRAME == this) then
+		if (MYADDONS_ACTIVE_OPTIONSFRAME == frame) then
 			ShowUIPanel(myAddOnsFrame)
 		end
 	end
@@ -144,8 +144,8 @@ end
 -- Event handler: one of the options dialog TABs has been clicked.
 -- Show the corresponding options frame and hide all other option frames.
 --
-function MI2_TabButton_OnClick( self )
-	PanelTemplates_Tab_OnClick( self, MI2_OptionsTabFrame )
+function MI2_TabButton_OnClick( frame )
+	PanelTemplates_Tab_OnClick( frame, MI2_OptionsTabFrame )
 	local selected = MI2_OptionsTabFrame.selectedTab
 
 	-- choose special information frame if mob health has been disabled
@@ -183,16 +183,16 @@ end
 
 
 -----------------------------------------------------------------------------
--- MI2_OptTargetFont_OnClick(this)
+-- MI2_OptTargetFont_OnClick()
 --
 -- Event handler: one of the choices in the font selection box has been
 -- clicked. Store it as a config option.
 --
-function MI2_OptTargetFont_OnClick(this)
+function MI2_OptTargetFont_OnClick(frame)
 	local oldID = UIDropDownMenu_GetSelectedID( MI2_OptTargetFont )
-	UIDropDownMenu_SetSelectedID( MI2_OptTargetFont, this:GetID())
-	if  oldID ~= this:GetID()  then
-		MobInfoConfig.TargetFont = this:GetID()
+	UIDropDownMenu_SetSelectedID( MI2_OptTargetFont, frame:GetID())
+	if  oldID ~= frame:GetID()  then
+		MobInfoConfig.TargetFont = frame:GetID()
 		MI2_MobHealth_SetPos()
 	end
 end  -- MI2_OptTargetFont_OnClick()
@@ -204,11 +204,11 @@ end  -- MI2_OptTargetFont_OnClick()
 -- Event handler: one of the choices in the items quality dropdown has been
 -- clicked. Store it as a config option.
 --
-function MI2_OptItemsQuality_OnClick(this)
+function MI2_OptItemsQuality_OnClick(frame)
 	local oldID = UIDropDownMenu_GetSelectedID( MI2_OptItemsQuality )
-	UIDropDownMenu_SetSelectedID( MI2_OptItemsQuality, this:GetID())
-	if  oldID ~= this:GetID()  then
-		MobInfoConfig.ItemsQuality = this:GetID()
+	UIDropDownMenu_SetSelectedID( MI2_OptItemsQuality, frame:GetID())
+	if  oldID ~= frame:GetID()  then
+		MobInfoConfig.ItemsQuality = frame:GetID()
 	end
 end  -- MI2_OptItemsQuality_OnClick()
 
@@ -219,11 +219,11 @@ end  -- MI2_OptItemsQuality_OnClick()
 -- Event handler: one of the choices in the tooltip mode dropdown has been
 -- clicked. Store it as a config option.
 --
-function MI2_OptTooltipMode_OnClick(this)
+function MI2_OptTooltipMode_OnClick(frame)
 	local oldID = UIDropDownMenu_GetSelectedID( MI2_OptTooltipMode )
-	UIDropDownMenu_SetSelectedID( MI2_OptTooltipMode, this:GetID())
-	if  oldID ~= this:GetID()  then
-		MobInfoConfig.TooltipMode = this:GetID()
+	UIDropDownMenu_SetSelectedID( MI2_OptTooltipMode, frame:GetID())
+	if  oldID ~= frame:GetID()  then
+		MobInfoConfig.TooltipMode = frame:GetID()
 	end
 	MI2_SetupTooltip()
 end  -- MI2_OptTooltipMode_OnClick()
@@ -235,10 +235,12 @@ end  -- MI2_OptTooltipMode_OnClick()
 -- Initialize a dropdown list with entries that are retrieved from the
 -- localization info.
 --
-function MI2_DropDown_Initialize(this)
-	if string.sub(this:GetName(),-6) ~= "Button" then return end
+function MI2_DropDown_Initialize(frame, level, menuList)
+	frameName = frame:GetName()
+	-- if string.sub(frameName,-6) ~= "Button" then return end
 	
-	local dropDownName = string.sub(this:GetName(),1,-7)
+	--local dropDownName = string.sub(frameName,1,-7)
+	local dropDownName = frameName
 	local choice = MI2_OPTIONS[dropDownName].choice1
 	local count = 1
 
@@ -257,13 +259,13 @@ end  -- MI2_DropDown_Initialize()
 -- Event handler: show a drop down list
 -- Ensure that current selection is shown correctly.
 --
-function MI2_DropDown_OnShow(self)
-	local frameName = self:GetName()
+function MI2_DropDown_OnShow(frame)
+	local frameName = frame:GetName()
 	local itemName = string.sub(frameName, 8)
 	local text=MI2_OPTIONS[frameName]["choice"..MobInfoConfig[itemName]]
 
-	UIDropDownMenu_SetSelectedID( self, MobInfoConfig[itemName] )
-	UIDropDownMenu_SetText( self, text ) 
+	UIDropDownMenu_SetSelectedID( frame, MobInfoConfig[itemName] )
+	UIDropDownMenu_SetText( frame, text ) 
 end  -- MI2_DropDown_OnShow()
 
 
@@ -271,7 +273,7 @@ end  -- MI2_DropDown_OnShow()
 -- MI2_DbOptionsFrameOnShow()
 --
 --
-function MI2_DbOptionsFrameOnShow()
+function MI2_DbOptionsFrameOnShow(frame)
 	local mobDbSize, healthDbSize, playerDbSize, itemDbSize = 0, 0, 0, 0
 
 	-- count and diplay size of MobInfo database
