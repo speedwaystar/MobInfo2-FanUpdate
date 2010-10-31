@@ -119,15 +119,10 @@
 				</Scripts>
 			</Button></Frames>
 		<Scripts>
-			<OnLoad>
-				MI2_OptionsFrameOnLoad(self)
-				self:RegisterForDrag("LeftButton")
-			</OnLoad>
-			<OnShow>MI2_OptionsFrameOnShow(self)</OnShow>
+			<OnLoad>MI2_OptionsFrameOnLoad()</OnLoad>
+			<OnShow>MI2_OptionsFrameOnShow()</OnShow>
 			<OnHide>MI2_TooltipAnchor:SetFrameStrata( "LOW" ) MI2_UpdateAnchor()</OnHide>
-			<OnMouseDown>miConfig_OnMouseDown(self)</OnMouseDown>
-			<OnMouseUp>miConfig_OnMouseUp(self)</OnMouseUp>
-			<OnDragStart>self:StartMoving()</OnDragStart>
-			<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+			<OnMouseDown>miConfig_OnMouseDown(self, button)</OnMouseDown>
+			<OnMouseUp>miConfig_OnMouseUp(self, button)</OnMouseUp>
 		</Scripts>
 	</Frame></Ui>

@@ -44,13 +44,13 @@ end  -- MI2_CheckForSeparateMobHealth
 -- main global initialization function, this is called as the handler
 -- for the "VARIABLES_LOADED" event
 --
-local function MI2_VariablesLoaded()
+local function MI2_VariablesLoaded(self, event, ...)
 	-- initialize "MobInfoConfig" data structure (main MobInfo config options)
 	MI2_InitOptions()
 
 	-- register with all AddOn managers that MobInfo attempts to support
 	-- currently that is: myAddons, KHAOS (mainly for Cosmos), EARTH (originally for Cosmos)
-	MI2_RegisterWithAddonManagers()
+	MI2_RegisterWithAddonManagers(self)
 
 	-- check for presence of separate interferring MobHealth AddOn
 	-- initialize built-in MobHealth if not disabled
@@ -117,7 +117,7 @@ end -- MI2_VariablesLoaded()
 --
 -- WoW event notification that loot frame has been opened
 --
-local function MI2_EventLootOpened( )
+local function MI2_EventLootOpened(self, event, ...)
 	local mobIndex = MI2_Target.mobIndex or MI2_LastTargetIdx
 	local numItems = GetNumLootItems()
 
@@ -144,8 +144,7 @@ local function MI2_EventLootOpened( )
 	-- can (and must) be ignored because they have already been fully processed
 	if MI2_CheckForCorpseReopen(mobIndex) then
 		midebug( "corpse REOPEN detected", 1 )
-	-- temporary kludge fix for lack of an effective unique MobId hashing algorithm
-		--return
+		return
 	end	
 
 	-- record all loot found on the corpse (called each time to catch skinning))
@@ -160,7 +159,7 @@ end -- MI2_EventLootOpened()
 -- This results in a new corpse ID which must be stored for corpse reopen
 -- detection
 --
-local function MI2_EventLootSlotCleared( )
+local function MI2_EventLootSlotCleared(self, event, ...)
 	MI2_StoreCorpseId( MI2_GetCorpseId(MI2_Target.mobIndex) )
 end -- MI2_EventLootSlotCleared
 
@@ -172,7 +171,7 @@ end -- MI2_EventLootSlotCleared
 -- This is used to catch empty loots when using auto-loot (Shift+RightClick)
 -- In this case "LOOT_CLOSED" is the only loot event that fires
 --
-local function MI2_EventLootClosed( )
+local function MI2_EventLootClosed(self, event, ...)
 	local mobIndex = MI2_Target.mobIndex
 	if mobIndex and not MI2_LootFrameOpen then
 		MI2_RecordAllLootItems( mobIndex, 0 )
@@ -188,8 +187,8 @@ end -- MI2_EventLootClosed
 -- accumulate all damage done to the current target, and will record all
 -- damage done to the player by the current target.
 --
-local function MI2_EventUnitCombat(...)
-	local unitID, action, descriptor, damage, damageType = ...;
+local function MI2_EventUnitCombat(self, event, ...)
+local unitID, action, descriptor, damage, damageType = ...
 	if unitID == "target" then
 		if MI2_Target.index and damage > 0 then
 			MI2_RecordTargetCombat( damage, action == "HEAL" )
@@ -214,8 +213,8 @@ end  -- MI2_EventUnitCombat()
 --
 -- if health value has changed update game tooltip
 --
-local function MI2_EventUnitHealth(...)
-	local unitID = ...;
+local function MI2_EventUnitHealth(self, event, ...)
+local unitID = ...
 	if unitID == "target" then
 		MI2_RecordTargetHealth( UnitHealth("target") )
 	end
@@ -229,8 +228,8 @@ end -- MI2_EventUnitHealth()
 -- This handler will update the mana shown in the target frame and also
 -- update mana shown in the game tooltip.
 --
-local function MI2_EventUnitMana(...)
-	local unitID = ...;
+local function MI2_EventUnitMana(self, event, ...)
+local unitID = ...
 	if unitID == "target" then
 		MobHealth_Display( )
 	end
@@ -244,7 +243,7 @@ end -- MI2_EventUnitMana()
 -- fill the global variable "MI2_Target" with all the data that MobInfo
 -- needs to know about the current target.
 --
-function MI2_OnTargetChanged()
+function MI2_OnTargetChanged(self, event, ...)
 	local name = UnitName("target")
 	local level = UnitLevel("target")
 
@@ -304,17 +303,15 @@ end  -- MI2_OnTargetChanged()
 -- handler for event CHAT_MSG_COMBAT_SELF_HITS
 -- handles normal and critical melee damage
 --
-local function MI2_EventSelfMelee(...)
-
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventSelfMelee(self, event, ...)
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
 
-	local s,e, mob, damage = string.find(message, MI2_ChatScanStrings[4])
+	local arg1 = ...
+	local s,e, mob, damage = string.find(arg1, MI2_ChatScanStrings[4])
 --if damage then chattext( "DBG: COMBATHITSELFOTHER: dmg="..damage ) end
 	if not damage then
-		s,e, mob, damage = string.find(message, MI2_ChatScanStrings[5])
+		s,e, mob, damage = string.find(arg1, MI2_ChatScanStrings[5])
 --if damage then chattext( "DBG: COMBATHITCRITSELFOTHER: dmg="..damage ) end
 	end
 
@@ -330,11 +327,9 @@ end  -- MI2_EventSelfMelee()
 -- handler for event "CHAT_MSG_SPELL_SELF_DAMAGE"
 -- handles normal and critical spell damage and damage done by bows/guns
 --
-local function MI2_EventSelfSpell(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventSelfSpell(self, event, ...)
 	local isResist = false
-
+	local message = ...
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
 
@@ -375,12 +370,10 @@ end -- MI2_EventSelfSpell()
 -- handler for event "CHAT_MSG_COMBAT_PET_HITS" and "CHAT_MSG_SPELL_PET_DAMAGE"
 -- handles normal and critical melee/spell damage done by players pet
 --
-local function MI2_EventPetMelee(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventPetMelee(self, event, ...)
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
-
+	local message = ...
 	local s,e, pet, mob, damage = string.find(message, MI2_ChatScanStrings[10])
 --if damage then chattext( "DBG: pet COMBATHITOTHEROTHER: dmg="..damage ) end
 	if not damage then
@@ -400,12 +393,10 @@ end -- MI2_EventPetMelee()
 -- handler for event "CHAT_MSG_COMBAT_PET_HITS" and "CHAT_MSG_SPELL_PET_DAMAGE"
 -- handles normal and critical melee/spell damage done by players pet
 --
-local function MI2_EventPetSpell(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventPetSpell(self, event, ...)
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
-
+	local message = ...
 	local s,e, pet, spell, mob, damage = string.find(message, MI2_ChatScanStrings[12])
 --if damage then chattext( "DBG: pet SPELLLOGOTHEROTHER: dmg="..damage ) end
 	if not damage then
@@ -425,12 +416,10 @@ end -- MI2_EventPetSpell()
 -- handler for event "CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE"
 -- handles periodic damage done by spells
 --
-local function MI2_EventSpellPeriodic(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventSpellPeriodic(self, event, ...)
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
-
+	local message = ...
 	local s,e, mob, damage, school, spell = string.find(message, MI2_ChatScanStrings[9])
 --if damage then chattext( "DBG: PERIODICAURADAMAGESELFOTHER: dmg="..damage..", spell="..spell..", school="..school ) end
 	if not damage then
@@ -452,13 +441,11 @@ end -- MI2_EventSpellPeriodic()
 -- Special processing of periodic events for the Chinese localisation.
 -- This function was kindly submitted by Andyca Chiou.
 --
-local function MI2_EventSpellPeriodic_ZHTW(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventSpellPeriodic_ZHTW(self, event, ...)
 	-- process event only for Mobs
 	--*** 2006/10/4 Modified by zhTW DOT message parsing
 	if not MI2_Target.mobIndex then return end
-	
+	local message = ...
 	--local s,e, mob, damage, school, spell = string.find(message, MI2_ChatScanStrings[9])
 	local s,e, spell, mob, damage, school = string.find(message, MI2_ChatScanStrings[9])
 --if damage then chattext( "DBG: PERIODICAURADAMAGESELFOTHER: dmg="..damage..", spell="..spell..", school="..school ) end
@@ -489,10 +476,9 @@ end -- MI2_EventSpellPeriodic()
 -- subscribe to it is to detect the opening of chest loot or collecting
 -- loot (chests, barrels, mining, herbs)
 --
-local function MI2_EventSelfBuff(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
-	local s,e, lootAction, lootType = string.find( message, MI2_ChatScanStrings[1] )
+local function MI2_EventSelfBuff(self, event, ...)
+	local message = ...
+	local s,e, lootAction, lootType = string.find(message, MI2_ChatScanStrings[1] )
 
 	-- set global flag that a non Mob loot window is being opened
 	if lootAction and lootType then
@@ -508,9 +494,8 @@ end -- MI2_EventSelfBuff()
 -- zhTW Chinese version parsing function for MI2_EventSelfBuff()
 -- This function was kindly submitted by Andyca Chiou.
 --
-local function MI2_EventSelfBuff_ZHTW(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventSelfBuff_ZHTW(self, event, ...)
+	local message = ...
 	local s,e, lootType, lootAction  = string.find( message, MI2_ChatScanStrings[1] )
 
 	-- set global flag that a non Mob loot window is being opened
@@ -527,14 +512,13 @@ end -- MI2_EventSelfBuff()
 -- Event handler for chat message telling me that a hostile mob has
 -- died.
 --
-local function MI2_EventHostileDeath(...)
-
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
+local function MI2_EventHostileDeath(self, event, ...)
 
 -- This function and event appears to have disappeared with WoW 2.4
 -- after some further testing and investigation it can most likely
 -- be removed from the code
 
+	local message = ...
 	local s,e, creatureName = string.find( message, MI2_ChatScanStrings[2] )
 	if creatureName then
 		if MI2_DebugEvents > 0 then midebug("no XP kill event: mob="..creatureName ) end
@@ -548,13 +532,13 @@ end -- MI2_EventHostileDeath()
 -- Combat log event handler : a unit has died in your vicinity
 -- This is the replacement for the no longer functioning "MI2_EventHostileDeath()"
 --
-local function MI2_UnitDied(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
+local function MI2_UnitDied(self, event, ...)
 
 --midebug("event="..tostring(event)..", a1="..tostring(arg1)..", a2="..tostring(arg2)..", a3="..tostring(arg3)..", a4="..tostring(arg4))
 --midebug("event="..tostring(event)..", a5="..tostring(arg5)..", a6="..tostring(arg6)..", a7="..tostring(arg7)..", a8="..tostring(arg8))
-
-	local creatureName = target
+	local arg1, arg2, arg3, arg4, arg5, arg6, arg7 = ...
+	--Argumente sind unbekannt, daher allgemeine Bezeichnungen
+	local creatureName = arg7
 	if creatureName then
 		if MI2_DebugEvents > 0 then midebug("no XP kill event: mob="..creatureName ) end
 		MI2_RecordKill( creatureName )
@@ -570,24 +554,23 @@ end -- MI2_UnitDied()
 -- event handler for the chat message telling us that a mob died
 -- and gave us XP points
 --
-function MI2_EventCreatureDiesXP(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-
+function MI2_EventCreatureDiesXP(self, event, ...)
+	local message = ...
 	local s,e, creature, xp = string.find( message, MI2_ChatScanStrings[3] )
 	if creature and xp then
 		if MI2_DebugEvents > 0 then midebug("kill event with XP: mob="..creature..", xp="..xp ) end
+--		midebug("kill event with XP: mob="..creature..", xp="..xp..message )
 		MI2_RecordKill( creature, tonumber(xp) )
 	end
 end -- MI2_EventCreatureDiesXP()
 
 -----------------------------------------------------------------------------
--- MI2_EventMonsterEmote(message,sender)
+-- MI2_EventMonsterEmote()
 --
 -- event handler for the WoW "CHAT_MSG_MONSTER_EMOTE" event
 --
-local function MI2_EventMonsterEmote(...)
-	local message, sender, language, channelString, target, flags, unknown1, channelNumber, channelName, unknown2, counter = ...;
-	
+local function MI2_EventMonsterEmote(self, event, ...)
+	local message, sender = ...
 	local s,e = string.find( message, MI2_CHAT_MOBRUNS )
 	if s then
 		MI2_RecordLowHpAction( sender, 1 )
@@ -601,7 +584,7 @@ end -- MI2_EventMonsterEmote()
 -- event handler for "ZONE_CHANGED_NEW_AREA" and "ZONE_CHANGED_INDOORS"
 -- this is processed for mob location tracking so that we know the zone
 --
-local function MI2_EventZoneChanged()
+local function MI2_EventZoneChanged(self, event, ...)
 	MI2_SetNewZone( GetZoneText() )
 end -- MI2_EventZoneChanged()
 
@@ -612,7 +595,7 @@ end -- MI2_EventZoneChanged()
 -- register the GameTooltip:OnShow event at player login time. This ensures
 -- that MobInfo is the (hopefully) last AddOn to hook into this event.
 --
-local function MI2_Player_Login()
+local function MI2_Player_Login(self, event, ...)
 	-- set current zone
 	MI2_EventZoneChanged()
 
@@ -620,7 +603,7 @@ local function MI2_Player_Login()
 	MI2_ScanSpellbook()
 
 	if not (myAddOnsFrame_Register or EarthFeature_AddButton or Khaos) then
-		chattext( "MobInfo  v"..miVersionNo.."  Loaded,  ".."enter /mi2 or /mobinfo for interface")
+		chattext( "MobInfo2  v"..miVersionNo.."  Loaded,  ".."enter /mi2 or /mobinfo for interface")
 	end
 	
 	-- collect all the garbage caused by loading the AddOn
@@ -645,7 +628,7 @@ function MI2_OnTooltipSetItem( ... )
 	if MobInfoConfig.KeypressMode == 1 and not IsAltKeyDown() then  return  end
 	if MobInfoConfig.ShowItemInfo == 1 then
 		-- add item loot info to item tooltip
-		MI2_BuildItemDataTooltip( getglobal("GameTooltipTextLeft1"):GetText() )
+		MI2_BuildItemDataTooltip( _G["GameTooltipTextLeft1"]:GetText() )
 	end
 end -- MI2_OnTooltipSetItem()
 
@@ -680,7 +663,7 @@ end -- MI2_InitializeEventTable()
 --
 function MI2_OnEvent(self, event, ...)
 	--midebug("event="..event..", a1="..(arg1 or "<nil>")..", a2="..(arg2 or "<nil>")..", a3="..(arg3 or "<nil>")..", a4="..(arg4 or "<nil>"))
-	MI2_EventHandlers[event].f(...)
+	MI2_EventHandlers[event].f(self, event, ...)
 end -- MI2_OnEvent
 
 
@@ -692,9 +675,10 @@ end -- MI2_OnEvent
 --
 function MI2_OnCombatLogEvent(self, event, ...)	
 	--midebug("event="..event..", a1="..(arg1 or "<nil>")..", a2="..(arg2 or "<nil>")..", a3="..(arg3 or "<nil>")..", a4="..(arg4 or "<nil>"))
+	local timestamp, event = ...
 	local realEvent = MI2_EventHandlers[event]
 	if realEvent then
-		realEvent.f(...)
+		realEvent.f()
 	end
 end -- MI2_OnCombatLogEvent
 
@@ -705,7 +689,7 @@ end -- MI2_OnCombatLogEvent
 -- Set up main event handler table and do stuff that must be done before
 -- "VARIABLES_LOADED" is called.
 --
-function MI2_OnLoad(this)
+function MI2_OnLoad(self)
 	-- main MobInfo event handler table
 	-- "f"=function to call, "always"=event always on flag, "basic"=mob basic info event, 
 	-- "items"=item tracking event, "loc"=mob location event, "char"=char specific event
@@ -774,7 +758,7 @@ function MI2_OnLoad(this)
 	end
 
 	-- process no other events until "VARIABLES_LOADED"
-	this:RegisterEvent("VARIABLES_LOADED")
+	self:RegisterEvent("VARIABLES_LOADED")
 
 	-- prepare for importing external database data
 	-- this must be done before "VARIABLES_LOADED" overwrites import data

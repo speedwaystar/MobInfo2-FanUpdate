@@ -28,8 +28,8 @@ function MI2_InitializeTooltip()
 	MI2_TooltipFrame:SetClampedToScreen( true )
 
 	for idx=1,MI2_MaxNumLines do
-		local text = getglobal( "MI2TT_Text"..idx )
-		local val = getglobal( "MI2TT_Val"..idx )
+		local text = _G["MI2TT_Text"..idx]
+		local val = _G["MI2TT_Val"..idx]
 		text.val = val
 	end
 	MI2_UpdateAnchor()
@@ -119,11 +119,11 @@ function MI2_SetupTooltip()
 		ttfont = GameFontNormalSmall
 	end
 	for idx=1,MI2_MaxNumLines do
-		getglobal("MI2TT_Text"..idx):SetFontObject(ttfont)
-		getglobal("MI2TT_Val"..idx):SetFontObject(ttfont)
+		_G["MI2TT_Text"..idx]:SetFontObject(ttfont)
+		_G["MI2TT_Val"..idx]:SetFontObject(ttfont)
 	end
 	for idx=1,MI2_MaxNumItems do
-		getglobal("MI2TT_Item"..idx):SetFontObject(ttfont)
+		_G["MI2TT_Item"..idx]:SetFontObject(ttfont)
 	end
 
 	-- calculate font height and columns width limitations based on font
@@ -212,9 +212,9 @@ end -- MI2_UpdateTooltipHealth
 -- client. This handler starts and stope moving the tooltip along with the
 -- mouse, and also handles tooltip fadeout.
 --
-function MI2_TooltipOnUpdate(self, elapsed )
+function MI2_TooltipOnUpdate( self, time )
 	-- half second action ticker : use it to update health/mana in tooltip
-	MI2_Tick = MI2_Tick + elapsed
+	MI2_Tick = MI2_Tick + time
 	if MI2_Tick > 0.5 then
 		MI2_Tick = 0
 		MI2_UpdateTooltipHealth()
@@ -230,7 +230,7 @@ function MI2_TooltipOnUpdate(self, elapsed )
 			MI2_IsMoving = 2
 		end
 	elseif  MI2_HideTimer < 4.0 then
-		MI2_HideTimer = MI2_HideTimer - elapsed
+		MI2_HideTimer = MI2_HideTimer - time
 		if  MI2_HideTimer < 1.0 then
 			MI2_TooltipFrame:SetAlpha( MI2_HideTimer )
 			if MI2_HideTimer < 0.1 then
@@ -353,7 +353,7 @@ local function MI2_FillTooltipWithData( mobData, unit )
 			value = MI2_EntryToString( opt.t, opt.data, mobData, unit )
 			if value then
 				numEntries = numEntries + 1
-				entry = getglobal( "MI2TT_Text"..numEntries )
+				entry = _G["MI2TT_Text"..numEntries]
 				entry:SetText( opt.text )
 				entry.val:SetText( value )
 				entry:Show()
@@ -364,14 +364,14 @@ local function MI2_FillTooltipWithData( mobData, unit )
 
 	-- hide all the unused tooltip columns
 	for idx = numEntries+1, MI2_MaxNumLines do
-		entry = getglobal( "MI2TT_Text"..idx )
+		entry = _G["MI2TT_Text"..idx]
 		entry:Hide()
 		entry.val:Hide()
 	end
 
 	-- fill the loot items lines
 	for idx = 1, MI2_MaxNumItems do
-		entry = getglobal( "MI2TT_Item"..idx )
+		entry = _G["MI2TT_Item"..idx]
 		itemText = MI2_EntryToString( 4, idx, mobData )
 		if itemText then
 			entry:SetText( itemText )
@@ -411,7 +411,7 @@ local function MI2_UpdateTooltip( mobData, mobName, unit )
 	local ttHeight = MI2_FontHeight
 	local right = false
 	for idx = 1, numEntries do
-		entry = getglobal( "MI2TT_Text"..idx )
+		entry = _G["MI2TT_Text"..idx]
 		txtWidth = entry:GetStringWidth() 
 		valWidth = entry.val:GetStringWidth()
 		if right and valWidth < MI2_MaxValWidth then
@@ -438,7 +438,7 @@ local function MI2_UpdateTooltip( mobData, mobName, unit )
 	-- use last extra info line for anchoring the mob data columns
 	local numExtraLines = #mobData.extraInfo
 	if numExtraLines > 0 then
-		local above = getglobal("MI2TT_ExtraInfo"..numExtraLines)
+		local above = _G["MI2TT_ExtraInfo"..numExtraLines]
 		MI2TT_Col1:SetPoint( "TOPLEFT", above, "BOTTOMLEFT", 0, -2 )
 	else
 		MI2TT_Col1:SetPoint( "TOPLEFT", MI2TT_ClassInfo, "BOTTOMLEFT", 0, -2 )
@@ -450,7 +450,7 @@ local function MI2_UpdateTooltip( mobData, mobName, unit )
 	-- arrange loot items layout
 	MI2TT_Item1:SetPoint( "TOPLEFT", MI2TT_Col1, "BOTTOMLEFT", 0, ttHeight - MI2_FontHeight )
 	for idx = 1, MI2_MaxNumItems do
-		entry = getglobal( "MI2TT_Item"..idx )
+		entry = _G["MI2TT_Item"..idx]
 		if entry:IsShown() then
 			ttHeight = ttHeight - MI2_FontHeight
 			txtWidth = entry:GetStringWidth() 

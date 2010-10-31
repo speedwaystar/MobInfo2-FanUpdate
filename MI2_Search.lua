@@ -134,17 +134,17 @@ end -- MI2_SearchOptionsOnShow()
 -- Validate all values and update colors accordingly.
 -- Allow Search only if all search options are valid.
 --
-local function MI2_ValidateSearchOptions(this)
+local function MI2_ValidateSearchOptions(self)
 	if MI2_SearchOptions.MinLevel < 1 then
 		MI2_SearchOptions.MinLevel = 1
-		if this:GetText() == "0" then
-			this:SetText( "1" )
+		if self:GetText() == "0" then
+			self:SetText( "1" )
 		end
 	end
 	if MI2_SearchOptions.MaxLevel < 1 then
 		MI2_SearchOptions.MaxLevel = 1
-		if this:GetText() == "0" then
-			this:SetText( "1" )
+		if self:GetText() == "0" then
+			self:SetText( "1" )
 		end
 	end
 end -- MI2_ValidateSearchOptions()
@@ -156,10 +156,10 @@ end -- MI2_ValidateSearchOptions()
 -- OnClicked event handler for checkboxes on search options page
 -- Store the checkbox state in the corresponding search options variable.
 --
-function MI2_SearchCheckboxClicked(this)
-	local checkboxName = this:GetName()
+function MI2_SearchCheckboxClicked(self)
+	local checkboxName = self:GetName()
 	local optionName = string.sub( checkboxName, 14 )
-	local optionValue = this:GetChecked() or 0
+	local optionValue = self:GetChecked() or 0
 
 	MI2_SearchOptions[optionName] = optionValue
 	MI2_UpdateSearchResultList()
@@ -174,14 +174,14 @@ end -- MI2_SearchCheckboxClicked()
 -- It gets the new value and stores it in the corresponding search options
 -- variable
 --
-function MI2_SearchValueChanged(this)
-	local editboxName = this:GetName()
+function MI2_SearchValueChanged(self)
+	local editboxName = self:GetName()
 	local optionName = string.sub( editboxName, 14 )
-	local optionValue = tonumber(this:GetText()) or 0
+	local optionValue = tonumber(self:GetText()) or 0
 
 	if MI2_SearchOptions[optionName] ~= optionValue then
 		MI2_SearchOptions[optionName] = optionValue
-		MI2_ValidateSearchOptions()
+		MI2_ValidateSearchOptions(self)
 		MI2_UpdateSearchResultList()
 	end
 end -- MI2_SearchValueChanged()
@@ -195,12 +195,12 @@ end -- MI2_SearchValueChanged()
 -- It gets the new value and stores it in the corresponding search options
 -- variable
 --
-function MI2_SearchTextChanged(this)
-	local editboxName = this:GetName()
+function MI2_SearchTextChanged(self)
+	local editboxName = self:GetName()
 	local optionName = string.sub( editboxName, 14 )
 
-	if MI2_SearchOptions[optionName] ~= this:GetText() then
-		MI2_SearchOptions[optionName] = this:GetText()
+	if MI2_SearchOptions[optionName] ~= self:GetText() then
+		MI2_SearchOptions[optionName] = self:GetText()
 		MI2_UpdateSearchResultList( true )
 	end
 end -- MI2_SearchTextChanged()
@@ -307,11 +307,11 @@ function MI2_DisplaySearchResult( resultType )
 	local resultLine
 	for i = 1, 15 do
 		if 	(i + sliderPos) <= MI2_NumMobsFound then
-			resultLine = getglobal( "MI2_SearchResult"..i.."Index" )
+			resultLine = _G[ "MI2_SearchResult"..i.."Index" ]
 			resultLine:SetText( i + sliderPos )
-			resultLine = getglobal( "MI2_SearchResult"..i.."Value" )
+			resultLine = _G[ "MI2_SearchResult"..i.."Value" ]
 			resultLine:SetText( MI2_SearchResultList[i + sliderPos].val )
-			resultLine = getglobal( "MI2_SearchResult"..i.."Name" )
+			resultLine = _G[ "MI2_SearchResult"..i.."Name" ]
 			local mobName = MI2_SearchResultList[i + sliderPos].idx
 			if MI2_SearchResultList[i + sliderPos].type then
 				mobName = mobName.."+"
@@ -320,11 +320,11 @@ function MI2_DisplaySearchResult( resultType )
 			end
 			resultLine:SetText( mobName )
 		else
-			resultLine = getglobal( "MI2_SearchResult"..i.."Index" )
+			resultLine = _G[ "MI2_SearchResult"..i.."Index" ]
 			resultLine:SetText( "" )
-			resultLine = getglobal( "MI2_SearchResult"..i.."Value" )
+			resultLine = _G[ "MI2_SearchResult"..i.."Value" ]
 			resultLine:SetText( "" )
-			resultLine = getglobal( "MI2_SearchResult"..i.."Name" )
+			resultLine = _G[ "MI2_SearchResult"..i.."Name" ]
 			resultLine:SetText( "" )
 		end
 	end
@@ -370,9 +370,9 @@ end -- end of MI2_SearchResult_Update()
 --
 -- Show mob tooltip for search result mob currently under mouse cursor.
 --
-function MI2_ShowSearchResultTooltip(this)
+function MI2_ShowSearchResultTooltip(self)
 	local sliderPos = FauxScrollFrame_GetOffset(MI2_SearchResultSlider)
-	local selection = tonumber(string.sub(this:GetName(), 17)) + sliderPos
+	local selection = tonumber(string.sub(self:GetName(), 17)) + sliderPos
 	  
 	if selection <= MI2_NumMobsFound then
 		if MI2_SearchOptions.ListMode == "Mobs" then

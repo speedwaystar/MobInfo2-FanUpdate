@@ -1,8 +1,9 @@
-﻿--
+--
 -- MobInfo.lua
 --
 -- Main module of MobInfo-2 AddOn
-miVersionNo = 'v3.75'
+miVersionNo = GetAddOnMetadata("MobInfo2", "Version")
+
 --
 -- MobInfo-2 is a World of Warcraft AddOn that provides you with useful
 -- additional information about Mobs (ie. opponents/monsters). It adds
@@ -32,6 +33,8 @@ local MI2_CurrentCorpseIndex = nil
 local MI2_RecentLoots = {}
 local MI2_SpellToSchool = {}
 local MI2_CACHE_SIZE = 30
+local GetSpellName = GetSpellName or GetSpellBookItemName
+local GetDifficultyColor = GetDifficultyColor or GetQuestDifficultyColor
 
 -- PTR code
 local _, _, _, tocVersion = GetBuildInfo()
@@ -46,6 +49,8 @@ local _, _, _, tocVersion = GetBuildInfo()
 --    deviate scale, perfect deviate scale, green whelp scale, worn dragonscale
 --    Shadow Draenite, Crystalline Fragments, Flame Spessarite
 --    Thick Clefthoof Leather, Nether Dragonscales, Cobra Scales, Wind Scales
+--    Borean Leather Scraps, Borean Leather, Arctic Fur, Icy Dragonscale, Nerubian Chitin, Jormungar Scale
+
 -- 
 -- skinning loot items that you only get with herbalism:
 --    Zangar Caps, Mote of Life, Ancient Lichen, Felweed, Small Mushroom, Terocone 
@@ -61,11 +66,12 @@ local miSkinLoot = { [2934]=1, [2318]=1, [2319]=1, [4234]=1, [4304]=1, [8170]=1,
                      [6470]=1, [6471]=1, [7392]=1, [8165]=1,
                     [23107]=1,[24189]=1,[21929]=1,
 					[27859]=1,[22575]=1,[22790]=1,[22785]=1,[25813]=1,[22789]=1,
-                    [25708]=1,[29548]=1,[29539]=1,[29547]=1 }
+                    [25708]=1,[29548]=1,[29539]=1,[29547]=1,
+                    [33567]=1,[33568]=1,[44128]=1,[38557]=1,[38558]=1,[38561]=1 }
 
 -- cloth loot table using localization independant item IDs
--- Linen Cloth, Wool Cloth, Silk Cloth, Mageweave Cloth, Felcloth, Runecloth, Mooncloth, Netherweave
-local miClothLoot = { [2589]=1, [2592]=1, [4306]=1, [4338]=1, [14256]=1, [14047]=1, [14342]=1, [21877 ]=1 };
+-- Linen Cloth, Wool Cloth, Silk Cloth, Mageweave Cloth, Felcloth, Runecloth, Mooncloth, Netherweave, Frostweave Cloth
+local miClothLoot = { [2589]=1, [2592]=1, [4306]=1, [4338]=1, [14256]=1, [14047]=1, [14342]=1, [21877]=1, [33470]=1 }
 
 local MI2_CollapseList = { [2725]=2725, [2728]=2725, [2730]=2725, [2732]=2725,
                            [2734]=2725, [2735]=2725, [2738]=2725, [2740]=2725, [2742]=2725,
@@ -275,10 +281,14 @@ function MI2_GetUnitBasedMobData( mobIndex, mobData, unitId )
 	end
 
 	local mobType = UnitClassification(unitId)
-	if mobType == "rare" or mobType == "elite" then
+	if mobType == "rare" then
 		mobData.mobType = 2
-	elseif mobType == "rareelite" or mobType == "worldboss" then
+	elseif mobType == "worldboss" then
 		mobData.mobType = 3
+	elseif mobType == "elite" then
+		mobData.mobType = 4
+	elseif mobType == "rareelite" then
+		mobData.mobType = 6
 	else
 		mobData.mobType = 1
 	end
@@ -919,6 +929,18 @@ function MI2_CheckAndCleanDatabases()
 
 	-- Initialise all database tables that do not exist
 	MobInfoDB = MobInfoDB or {}
+
+	-- Take MI3 database tables, instead of MI2 databas tables, if present
+	if MI3_CharTable then
+	 MI2_CharTable = MI3_CharTable
+	 MI2_ItemNameTable = MI3_ItemNameTable
+	 MI2_ZoneTable = MI3_ZoneTable
+	end
+
+	if MI3_XRefItemTable then
+	  MI2_XRefItemTable = MI3_XRefItemTable
+	end
+
 	MI2_CharTable = MI2_CharTable or { charCount = 0 }
 	MI2_ItemNameTable = MI2_ItemNameTable or {}
 	MI2_XRefItemTable = MI2_XRefItemTable or {}
@@ -939,7 +961,7 @@ function MI2_CheckAndCleanDatabases()
 	if version  < 9 or subver < 1 then
 		MI2_UpdateDatabaseV8ToV9()
 	end
-	
+
 	-- for SV 1 remove all mobs without basic info (bi)
 	-- this cleans up after a bug that accidentally stored NPCs as mobs without bi
 	if subver == 1 then
@@ -1195,7 +1217,7 @@ function MI2_RecordKill( creatureName, xp )
 			end
 		end
 	end
-	
+
 	if MobInfoConfig.SaveCharData == 1 and mobIndex then
 		local mobData = MI2_FetchMobData( mobIndex )
 		if xp then
@@ -1460,28 +1482,33 @@ end -- lootName2Copper()
 -----------------------------------------------------------------------------
 -- MI2_FindItemValue()
 --
--- Find the item value in either the Auctioneer database or in out own copy
--- of the Auctioneer item value database or by asking KC_Items
+-- 1. Find the item value in the ItemDataCache database or
+-- 2. Find the item value in the Auctioneer database or 
+-- 3. Find the itme value by asking KC_Items or
+-- 4. Find the item value in the Itemsync Database
+-- 5. Find in out own copy of the item value database (need update)
 --
 function MI2_FindItemValue( itemID )
 	local price = 0
-	
-	-- check if KC_Items is available and knows the price
-	if KC_Common and KC_Common.GetItemPrices then
-		price = KC_Common:GetItemPrices(itemID) or 0
-		
-	-- check if ItemsSync is installed and knows the price
-	elseif ISync and ISync.FetchDB then
-		price = tonumber( ISync:FetchDB(itemID, "price") or 0 )
-	end
 
-	if price == 0 and ItemDataCache then
+	if ItemDataCache then
 		price = (ItemDataCache.Get.ByID_selltovendor(itemID) or 0)
  	end
 
 	-- check if Auctioneer is installed and knows the price
 	if price == 0 and Auctioneer_GetVendorSellPrice then
 		price = Auctioneer_GetVendorSellPrice(itemID) or 0
+	end
+	
+        if price == 0 then
+	-- check if KC_Items is available and knows the price
+	        if KC_Common and KC_Common.GetItemPrices then
+			price = KC_Common:GetItemPrices(itemID) or 0
+		
+	-- check if ItemsSync is installed and knows the price
+		elseif ISync and ISync.FetchDB then
+			price = tonumber( ISync:FetchDB(itemID, "price") or 0 )
+		end
 	end
 
 	-- check if built-in MobInfo price table knows the price
@@ -1895,8 +1922,8 @@ local function MI2_BuildExtraInfo( mobData, mobName, mobLevel )
 	local numLines = GameTooltip:NumLines()
 
 	for idx=2,numLines do
-		local ttLeft = getglobal( "GameTooltipTextLeft"..idx ):GetText()
-		local ttRight = getglobal( "GameTooltipTextRight"..idx ):GetText()
+		local ttLeft = _G["GameTooltipTextLeft"..idx]:GetText()
+		local ttRight = _G["GameTooltipTextRight"..idx]:GetText()
 		isExtraInfo = false
 
 		-- check for line with faction name
@@ -2135,20 +2162,18 @@ function MI2_BuildTooltipMob( mobName, mobLevel, unit, isMob )
 		levelInfo = "BOSS"
 		mobData.mobType = 3
 		mobLevel = 99
-	elseif mobData.mobType == 2 then
-		levelInfo = levelInfo.."+"
+	elseif mobData.mobType == 2 then                                                                   
+		levelInfo = levelInfo.."!"     -- rare
 	elseif mobData.mobType == 3 then
-		levelInfo = levelInfo.."++"
+		levelInfo = levelInfo.."++"    -- BOSS
+	elseif mobData.mobType == 4 then                                                                   
+		levelInfo = levelInfo.."+"     -- Elite
+	elseif mobData.mobType == 6 then                                                                   
+		levelInfo = levelInfo.."+!"    -- rare Elite
 	end
 
 	-- PTR Code
-	local col
-	if tocVersion >= 30200 then
-		col = GetQuestDifficultyColor(mobLevel)
-	else
-		col = GetDifficultyColor(mobLevel)
-	end
-		
+	local col = GetDifficultyColor(mobLevel)
 	mobData.levelInfo = MI2_ColorToText(col.r,col.g,col.b).."["..levelInfo.."] " 
 
 	-- build various content to be shown in the tooltip
@@ -2177,12 +2202,12 @@ end -- MI2_BuildTooltipMob()
 --
 function MI2_ScanSpellbook()
 	local spellBookPage = 2
-	
+
 	while spellBookPage > 0 do
 		local pageName, texture, offset, numSpells = GetSpellTabInfo( spellBookPage )
 		if pageName and offset and numSpells then
 			for spellIndex = (offset+1), (offset + numSpells) do
-				local spellName, spellSubName = GetSpellBookItemName( spellIndex, BOOKTYPE_SPELL )
+				local spellName = GetSpellName( spellIndex, BOOKTYPE_SPELL )
 				if spellName and (not string.find(spellName,":")) then
 					for school in pairs(MI2_SpellSchools) do
 						local schoolOK = string.find( pageName, school )

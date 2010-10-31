@@ -1,62 +1,53 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
 	<Frame name="MI2_TooltipOptionsTemplate" virtual="true">
-		<Size>
-			<AbsDimension x="420" y="390" /></Size>
+		<Size x="420" y="390" />
 		<Frames>
 			<!-- ================================================ -->
 			<!-- frame with tooltip show/hide options             -->
 			<Frame name="MI2_FrmTooltipContent" inherits="MI2_OptionsBoxTemplate" >
-				<Size>
-					<AbsDimension x="220" y="330"/></Size>
+				<Size x="220" y="330"/>
 				<Anchors>
 					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="-10" y="-10" /></Offset></Anchor></Anchors>
+						<Offset x="-10" y="-10" /></Anchor></Anchors>
 				<Frames>
 					<!-- ================================================= -->
 					<!-- show/hide options within tooltip options frame    -->
 					<CheckButton name="MI2_OptShowHealth" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_FrmTooltipContent">
-								<Offset>
-									<AbsDimension x="5" y="-5" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="5" y="-5" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowMana" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowHealth" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="65" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="65" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowXp" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowHealth" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowNo2lev" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowXp" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="65" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="65" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowKills" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowXp" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowLoots" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowKills" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="65" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="65" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowCloth" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowKills" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowEmpty" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowCloth" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="65" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="65" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowTotal" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowCloth" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowCoin" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowTotal" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="65" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="65" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowIV" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowTotal" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
@@ -67,8 +58,7 @@
 					<CheckButton name="MI2_OptShowLocation" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowDamage" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="65" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="65" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowResists" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowDamage" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
@@ -82,109 +72,88 @@
 					<CheckButton name="MI2_OptShowIGrey" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowQuality" relativePoint="BOTTOMLEFT">
-								<Offset>
-									<AbsDimension x="10" y="-22" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="10" y="-22" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowIWhite" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIGrey" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="18" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="18" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowIGreen" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIWhite" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="18" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="18" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowIBlue" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIGreen" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="18" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="18" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowIPurple" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIBlue" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="18" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="18" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowItems" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIGrey" relativePoint="BOTTOMLEFT">
-								<Offset>
-									<AbsDimension x="0" y="0" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="0" y="0" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptShowClothSkin" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowItems" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
 					<Frame name="MI2_FrmLootList" inherits="MI2_OptionsBoxTemplate" >
-						<Size>
-							<AbsDimension x="202" y="100" /></Size>
+						<Size x="202" y="100" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowQuality" relativePoint="BOTTOMLEFT">
-								<Offset>
-									<AbsDimension x="4" y="-15" /></Offset></Anchor></Anchors>
+								<Offset x="4" y="-15" /></Anchor></Anchors>
 						<Layers>
 							<Layer level="BACKGROUND">
 								<FontString name="MI2_TxtItemFilter" inherits="GameFontNormalSmall" text="MI_TXT_ITEMFILTER">
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeTo="MI2_OptShowClothSkin" relativePoint="BOTTOMLEFT">
-											<Offset>
-												<AbsDimension x="0" y="-5"/></Offset></Anchor></Anchors></FontString></Layer></Layers></Frame>
+											<Offset x="0" y="-5"/></Anchor></Anchors></FontString></Layer></Layers></Frame>
 					<EditBox name="MI2_OptItemFilter" inherits="MI2_OptionsEditBox_Template">
-						<Size>
-							<AbsDimension x="120" y="24"/></Size>
+						<Size x="120" y="24"/>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_TxtItemFilter" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="10" y="5"/></Offset></Anchor></Anchors></EditBox>
+								<Offset x="10" y="5"/></Anchor></Anchors></EditBox>
 					<Frame name="MI2_FrmLootGrey">
-						<Size>
-							<AbsDimension x="14" y="10" /></Size>
+						<Size x="14" y="10" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIGrey" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="-2" y="-5" /></Offset></Anchor></Anchors>
+								<Offset x="-2" y="-5" /></Anchor></Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
 								<Texture name="MI2_TexLootGrey">
 									<Color r="0.5" g="0.5" b="0.5"/></Texture></Layer></Layers>
 					</Frame>
 					<Frame name="MI2_FrmLootWhite">
-						<Size>
-							<AbsDimension x="14" y="10" /></Size>
+						<Size x="14" y="10" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIWhite" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="-2" y="-5" /></Offset></Anchor></Anchors>
+								<Offset x="-2" y="-5" /></Anchor></Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
 								<Texture name="MI2_TexLootWhite">
 									<Color r="1" g="1" b="1"/></Texture></Layer></Layers></Frame>
 					<Frame name="MI2_FrmLootGreen">
-						<Size>
-							<AbsDimension x="14" y="10" /></Size>
+						<Size x="14" y="10" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIGreen" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="-2" y="-5" /></Offset></Anchor></Anchors>
+								<Offset x="-2" y="-5" /></Anchor></Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
 								<Texture name="MI2_TexLootGreen">
 									<Color r="0" g="1.0" b="0"/></Texture></Layer></Layers></Frame>
 					<Frame name="MI2_FrmLootBlue">
-						<Size>
-							<AbsDimension x="14" y="10" /></Size>
+						<Size x="14" y="10" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIBlue" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="-2" y="-5" /></Offset></Anchor></Anchors>
+								<Offset x="-2" y="-5" /></Anchor></Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
 								<Texture name="MI2_TexLootBlue">
 									<Color r="0.1" g="0.3" b="1"/></Texture></Layer></Layers></Frame>
 					<Frame name="MI2_FrmLootPurple">
-						<Size>
-							<AbsDimension x="14" y="10" /></Size>
+						<Size x="14" y="10" />
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowIPurple" relativePoint="TOPRIGHT">
-								<Offset>
-									<AbsDimension x="-2" y="-5" /></Offset></Anchor></Anchors>
+								<Offset x="-2" y="-5" /></Anchor></Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
 								<Texture name="MI2_TexLootPurple">
@@ -200,37 +169,30 @@
 			<Button name="MI2_OptAllOff" inherits="MI2_PushButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MI2_OptAllOn" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0" /></Offset></Anchor></Anchors></Button>
+						<Offset x="0" y="0" /></Anchor></Anchors></Button>
 			<!-- ================================================ -->
 			<!-- frame around MobInfo tooltip layout options box  -->
 			<Frame name="MI2_FrmTooltipLayout" inherits="MI2_OptionsBoxTemplate" >
-				<Size>
-					<AbsDimension x="215" y="190" /></Size>
+				<Size x="215" y="190" />
 				<Layers>
 					<Layer level="ARTWORK">
 						<FontString name="MI2_TxtTooltipMove" inherits="MI2TT_ValTemplate" text="MI_TXT_TOOLTIP_MOVE" justifyH="LEFT" justifyV="BOTTOM" >
-							<Size>
-								<AbsDimension x="200" y="32" /></Size>
+							<Size x="200" y="32" />
 							<Anchors>
 								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
-									<Offset>
-										<AbsDimension x="6" y="8" /></Offset></Anchor></Anchors></FontString></Layer></Layers>
+									<Offset x="6" y="8" /></Anchor></Anchors></FontString></Layer></Layers>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MI2_FrmTooltipContent" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0" /></Offset></Anchor></Anchors>
+						<Offset x="5" y="0" /></Anchor></Anchors>
 				<Frames>
 					<Button name="MI2_OptTooltipMode" inherits="MI2_DropDownTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_FrmTooltipLayout">
-								<Offset>
-									<AbsDimension x="-10" y="-20" /></Offset></Anchor></Anchors></Button>
+								<Offset x="-10" y="-20" /></Anchor></Anchors></Button>
 					<CheckButton name="MI2_OptMouseTooltip" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_FrmTooltipLayout">
-								<Offset>
-									<AbsDimension x="5" y="-50" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="5" y="-50" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptSmallFont" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptMouseTooltip" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton>
@@ -246,30 +208,25 @@
 			<!-- ================================================ -->
 			<!-- frame around item tooltip options box            -->
 			<Frame name="MI2_FrmItemTooltip" inherits="MI2_OptionsBoxTemplate" >
-				<Size>
-					<AbsDimension x="215" y="60" /></Size>
+				<Size x="215" y="60" />
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="MI2_FrmTooltipContent" relativePoint="BOTTOMRIGHT">
-						<Offset>
-							<AbsDimension x="5" y="0" /></Offset></Anchor></Anchors>
+						<Offset x="5" y="0" /></Anchor></Anchors>
 				<Frames>
 					<CheckButton name="MI2_OptShowItemPrice" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_FrmItemTooltip">
-								<Offset>
-									<AbsDimension x="5" y="-10" /></Offset></Anchor></Anchors></CheckButton>
+								<Offset x="5" y="-10" /></Anchor></Anchors></CheckButton>
 					<CheckButton name="MI2_OptItemTooltip" inherits="MI2_CheckboxTemplate">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="MI2_OptShowItemPrice">
-								<Offset>
-									<AbsDimension x="0" y="-20" /></Offset></Anchor></Anchors></CheckButton></Frames></Frame>
+								<Offset x="0" y="-20" /></Anchor></Anchors></CheckButton></Frames></Frame>
 			<!-- ==================================================== -->
 			<!-- buttons controlling overall tooltip options    -->
 			<CheckButton name="MI2_OptCombinedMode" inherits="MI2_CheckboxTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MI2_FrmTooltipLayout" relativePoint="BOTTOMLEFT">
-						<Offset>
-							<AbsDimension x="0" y="-10" /></Offset></Anchor></Anchors></CheckButton>
+						<Offset x="0" y="-10" /></Anchor></Anchors></CheckButton>
 			<CheckButton name="MI2_OptKeypressMode" inherits="MI2_CheckboxTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="MI2_OptCombinedMode" relativePoint="BOTTOMLEFT"/></Anchors></CheckButton></Frames></Frame></Ui>

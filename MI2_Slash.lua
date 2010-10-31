@@ -68,7 +68,7 @@ end -- MI2_SlashAction_AllOff
 --
 -- Register with the EARTH AddOn manager.
 --
-function MI2_RegisterWithAddonManagers()
+function MI2_RegisterWithAddonManagers(self)
 
 	-- register with myAddons manager
 	if ( myAddOnsFrame_Register ) then
@@ -183,8 +183,8 @@ end  -- MI2_Slash_ClearDbConfirmed()
 -- Clear entire contents of MobInfo and MobHealth databases.
 -- Ask for confirmation before performing the clear operation.
 --
-function MI2_SlashAction_ClearHealthDb()
-	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS["MI2_OptClearHealthDb"].help.."' ?"
+function MI2_SlashAction_ClearHealthDb(self)
+	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS[self:GetName()].help.."' ?"
 	StaticPopupDialogs["MOBINFO_CONFIRMATION"].OnAccept = MI2_Slash_ClearDbConfirmed
 	MI2_DeleteMode = "HealthDb"
 	local dialog = StaticPopup_Show( "MOBINFO_CONFIRMATION", "")
@@ -197,8 +197,8 @@ end  -- MI2_SlashAction_ClearHealthDb()
 -- Clear entire contents of MobInfo and MobHealth databases.
 -- Ask for confirmation before performing the clear operation.
 --
-function MI2_SlashAction_ClearPlayerDb()
-	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS["MI2_OptClearPlayerDb"].help.."' ?"
+function MI2_SlashAction_ClearPlayerDb(self)
+	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS[self:GetName()].help.."' ?"
 	StaticPopupDialogs["MOBINFO_CONFIRMATION"].OnAccept = MI2_Slash_ClearDbConfirmed
 	MI2_DeleteMode = "PlayerDb"
 	local dialog = StaticPopup_Show( "MOBINFO_CONFIRMATION", "")
@@ -211,8 +211,8 @@ end  -- MI2_SlashAction_ClearPlayerDb()
 -- Clear entire contents of MobInfo and MobHealth databases.
 -- Ask for confirmation before performing the clear operation.
 --
-function MI2_SlashAction_ClearMobDb()
-	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS["MI2_OptClearMobDb"].help.."' ?"
+function MI2_SlashAction_ClearMobDb(self)
+	StaticPopupDialogs["MOBINFO_CONFIRMATION"].text = MI_TXT_CLR_ALL_CONFIRM.."'"..MI2_OPTIONS[self:GetName()].help.."' ?"
 	StaticPopupDialogs["MOBINFO_CONFIRMATION"].OnAccept = MI2_Slash_ClearDbConfirmed
 	MI2_DeleteMode = "MobDb"
 	local dialog = StaticPopup_Show( "MOBINFO_CONFIRMATION", "")
@@ -445,7 +445,7 @@ end  -- MI2_SlashInit()
 -- When used by the options dialog there is no need to actually update the
 -- dialog, which is indicated by the "updateOptions" parameter.
 --
-function MI2_SlashParse( msg )
+function MI2_SlashParse(msg)
 	-- extract option name and option argument from message string
 	local _, _, cmd, param = string.find( string.lower(msg), "([%w_]*)[ ]*([-%w]*)") 
 	
@@ -535,7 +535,7 @@ function MI2_OptionParse( optionName, optionData, param )
 	else
 		-- special action commands have a corresponding handler function
 		local actionHandlerName = "MI2_SlashAction_"..optionName
-		local actionHandler = getglobal( actionHandlerName )
+		local actionHandler = _G[actionHandlerName]
 		if  actionHandler  then
 			actionHandler()
 			updateOptions = true -- for AllOn, AllOff, etc.

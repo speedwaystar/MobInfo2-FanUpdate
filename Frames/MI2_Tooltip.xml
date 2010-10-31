@@ -7,14 +7,10 @@
 	<!-- Tooltip Anchor Frame                        -->
 	<!-- Movable Anchor position for the mob tooltip -->
 	<Frame name="MI2_TooltipAnchor" parent="UIParent" frameStrata="LOW" enableMouse="true" movable="true">
-		<Size>
-			<AbsDimension x="25" y="18"/>
-		</Size>
+		<Size x="25" y="18"/>
 		<Anchors>
 			<Anchor point="TOPRIGHT">
-				<Offset>
-					<AbsDimension x="-4" y="-200"/>
-				</Offset>
+				<Offset x="-4" y="-200"/>
 			</Anchor>
 		</Anchors>
 		<Backdrop name="MITTBD" edgeFile="Interface/Tooltips/UI-Tooltip-Border" tile="true">
@@ -49,9 +45,7 @@
 	<!-- Shows all Mob information collected by MobInfo,fully configurable -->
 	<!-- through the MobInfo options window                                 -->
 	<Frame name="MI2_TooltipFrame" parent="UIParent" frameStrata="TOOLTIP" hidden="true" enableMouse="true" movable="true">
-		<Size>
-			<AbsDimension x="4" y="4"/>
-		</Size>
+		<Size x="4" y="4"/>
 		<Anchors>
 			<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT"/>
 		</Anchors>
@@ -60,9 +54,7 @@
 				<FontString name="MI2TT_MobLevel" inherits="MI2TT_InfoTemplate">
 					<Anchors>
 						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="4" y="-4"/>
-							</Offset>
+							<Offset x="4" y="-4"/>
 						</Anchor>
 					</Anchors>
 				</FontString>
