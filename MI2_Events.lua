@@ -144,7 +144,7 @@ local function MI2_EventLootOpened(self, event, ...)
 	-- can (and must) be ignored because they have already been fully processed
 	if MI2_CheckForCorpseReopen(mobIndex) then
 		midebug( "corpse REOPEN detected", 1 )
-		return
+		--return
 	end	
 
 	-- record all loot found on the corpse (called each time to catch skinning))
