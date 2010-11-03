@@ -236,7 +236,7 @@ end  -- MI2_OptTooltipMode_OnClick()
 -- localization info.
 --
 function MI2_DropDown_Initialize(self)
-	-- if string.sub(self:GetName(),-6) ~= "Button" then return end
+	if self:GetObjectType() ~= "Button" then return end
 	
 	local dropDownName = self:GetName()
 	local choice = MI2_OPTIONS[dropDownName].choice1

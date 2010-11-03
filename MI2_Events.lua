@@ -56,7 +56,7 @@ local function MI2_VariablesLoaded(self, event, ...)
 	-- initialize built-in MobHealth if not disabled
 	MI2_CheckForSeparateMobHealth()
 	--MI2_MobHealth_SetPos()
-	MI2_OptionParse( "", {}, nil )
+	MI2_OptionParse( self, "", {}, nil )
 
 	-- ensure that MobHealthFrame get set correctly (if we have to set it for compatibility)
 	if  MobHealthFrame == "MI2"  then
@@ -100,7 +100,7 @@ local function MI2_VariablesLoaded(self, event, ...)
 	MI2_SpellSchools = newSchools
 
 	-- from this point onward process events
-	MI2_InitializeEventTable()
+	MI2_InitializeEventTable(self)
 
 	MI2_UpdateOptions()
 	MI2_InitializeTooltip()
@@ -307,11 +307,11 @@ local function MI2_EventSelfMelee(self, event, ...)
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
 
-	local arg1 = ...
-	local s,e, mob, damage = string.find(arg1, MI2_ChatScanStrings[4])
+	local message = ...
+	local s,e, mob, damage = string.find(message, MI2_ChatScanStrings[4])
 --if damage then chattext( "DBG: COMBATHITSELFOTHER: dmg="..damage ) end
 	if not damage then
-		s,e, mob, damage = string.find(arg1, MI2_ChatScanStrings[5])
+		s,e, mob, damage = string.find(message, MI2_ChatScanStrings[5])
 --if damage then chattext( "DBG: COMBATHITCRITSELFOTHER: dmg="..damage ) end
 	end
 
@@ -329,10 +329,10 @@ end  -- MI2_EventSelfMelee()
 --
 local function MI2_EventSelfSpell(self, event, ...)
 	local isResist = false
-	local message = ...
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
 
+	local message = ...
 	local s,e, spell, mob, damage, school = string.find(message, MI2_ChatScanStrings[17])
 --if damage then chattext( "DBG: SPELLLOGCRITSCHOOLSELFOTHER: dmg="..damage..", spell="..spell..", school="..school ) end
 	if not damage then
@@ -536,10 +536,18 @@ local function MI2_UnitDied(self, event, ...)
 
 --midebug("event="..tostring(event)..", a1="..tostring(arg1)..", a2="..tostring(arg2)..", a3="..tostring(arg3)..", a4="..tostring(arg4))
 --midebug("event="..tostring(event)..", a5="..tostring(arg5)..", a6="..tostring(arg6)..", a7="..tostring(arg7)..", a8="..tostring(arg8))
-	local arg1, arg2, arg3, arg4, arg5, arg6, arg7 = ...
-	--Argumente sind unbekannt, daher allgemeine Bezeichnungen
-	local creatureName = arg7
+	--local arg1, arg2, arg3, arg4, arg5, arg6, arg8 = ...
+	--if arg1 ~= nil then chattext("timestamp  = "..arg1) end
+	--if arg2 ~= nil then chattext("event      = "..arg2) end
+	--if arg3 ~= nil then chattext("sourceGUID = "..arg3) end
+	--if arg4 ~= nil then chattext("sourceName = "..arg4) end
+	--if arg5 ~= nil then chattext("sourceFlags= "..arg5) end
+	--if arg6 ~= nil then chattext("destGUID   = "..arg6) end
+	--if arg7 ~= nil then chattext("destName   = "..arg7) end
+	--if arg8 ~= nil then chattext("destFlags  = "..arg8) end
+	local creatureName = select(7, ...)
 	if creatureName then
+		--chattext("Kreatur = "..creatureName)
 		if MI2_DebugEvents > 0 then midebug("no XP kill event: mob="..creatureName ) end
 		MI2_RecordKill( creatureName )
 	end
@@ -603,7 +611,7 @@ local function MI2_Player_Login(self, event, ...)
 	MI2_ScanSpellbook()
 
 	if not (myAddOnsFrame_Register or EarthFeature_AddButton or Khaos) then
-		chattext( "MobInfo2  v"..miVersionNo.."  Loaded,  ".."enter /mi2 or /mobinfo for interface")
+		chattext( "MobInfo2  "..miVersionNo.."  Loaded,  ".."enter /mi2 or /mobinfo for interface")
 	end
 	
 	-- collect all the garbage caused by loading the AddOn
@@ -640,7 +648,7 @@ end -- MI2_OnTooltipSetItem()
 -- needed for the current MobInfo recording options. The general rule is
 -- that we only register events if we want to record the data of the event.
 --
-function MI2_InitializeEventTable()
+function MI2_InitializeEventTable(self)
 	-- reset all events to their always on flag state
 	for eventName, eventInfo in pairs(MI2_EventHandlers) do
 		local eventEnabled = eventInfo.always or MobInfoConfig.SaveBasicInfo == 1 
@@ -648,9 +656,9 @@ function MI2_InitializeEventTable()
 				or MobInfoConfig.SaveCharData == 1 and eventInfo.char
 				or MobInfoConfig.SaveItems == 1 and eventInfo.items)
 		if eventEnabled then
-			MI2_MobInfoFrame:RegisterEvent( eventName )
+			self:RegisterEvent( eventName )
 		else
-			MI2_MobInfoFrame:UnregisterEvent( eventName )
+			self:UnregisterEvent( eventName )
 		end
 	end
 end -- MI2_InitializeEventTable()
@@ -675,10 +683,12 @@ end -- MI2_OnEvent
 --
 function MI2_OnCombatLogEvent(self, event, ...)	
 	--midebug("event="..event..", a1="..(arg1 or "<nil>")..", a2="..(arg2 or "<nil>")..", a3="..(arg3 or "<nil>")..", a4="..(arg4 or "<nil>"))
-	local timestamp, event = ...
+	-- local timestamp, event, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags = ...
+	local event = select(2, ...)
 	local realEvent = MI2_EventHandlers[event]
 	if realEvent then
-		realEvent.f()
+		--chattext("Subevent = "..event)
+		realEvent.f(self, event, ...)
 	end
 end -- MI2_OnCombatLogEvent
 

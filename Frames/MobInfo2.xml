@@ -35,5 +35,5 @@
 						</Anchor></Anchors></Texture></Layer></Layers>
 		<HighlightTexture	alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
 		<Scripts>
-			<OnClick>MI2_SlashParse("")</OnClick>
+			<OnClick>MI2_SlashParse("", self)</OnClick>
 		</Scripts></Button></Ui>
