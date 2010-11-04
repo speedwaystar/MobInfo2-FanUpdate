@@ -1491,7 +1491,7 @@ end -- lootName2Copper()
 function MI2_FindItemValue( itemID )
     -- chattext("ItemID = "..itemID)
 	local price = 0
-
+	
 	-- Addons ItemdataCache, ItemSync are out of Date
 	-- Auctioneer v4 function is out of Date
 	--[[
@@ -1518,13 +1518,13 @@ function MI2_FindItemValue( itemID )
 	]]
 	price = select(11, GetItemInfo(itemID)) or 0
 	-- chattext("Preis neu = "..price)
-
+		
 	-- check if built-in MobInfo price table knows the price
 	if price == 0 then
 		price = MI2_BasePrices[itemID] or 0
 	end
 	-- chattext("Preis intern = "..price)
-
+		
 	return price
 end -- MI2_FindItemValue()
 

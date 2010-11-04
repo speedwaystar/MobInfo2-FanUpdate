@@ -306,7 +306,6 @@ end  -- MI2_OnTargetChanged()
 local function MI2_EventSelfMelee(self, event, ...)
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
-
 	local message = ...
 	local s,e, mob, damage = string.find(message, MI2_ChatScanStrings[4])
 --if damage then chattext( "DBG: COMBATHITSELFOTHER: dmg="..damage ) end
@@ -331,7 +330,7 @@ local function MI2_EventSelfSpell(self, event, ...)
 	local isResist = false
 	-- process event only for Mobs
 	if not MI2_Target.mobIndex then return end
-
+	
 	local message = ...
 	local s,e, spell, mob, damage, school = string.find(message, MI2_ChatScanStrings[17])
 --if damage then chattext( "DBG: SPELLLOGCRITSCHOOLSELFOTHER: dmg="..damage..", spell="..spell..", school="..school ) end
@@ -663,13 +662,14 @@ function MI2_InitializeEventTable(self)
 	end
 end -- MI2_InitializeEventTable()
 
+
 -----------------------------------------------------------------------------
 -- MI2_OnEvent()
 --
 -- MobInfo main event handler function, gets called for all registered events
 -- uses table with event handler info
 --
-function MI2_OnEvent(self, event, ...)
+function MI2_OnEvent(self, event, ...)	
 	--midebug("event="..event..", a1="..(arg1 or "<nil>")..", a2="..(arg2 or "<nil>")..", a3="..(arg3 or "<nil>")..", a4="..(arg4 or "<nil>"))
 	MI2_EventHandlers[event].f(self, event, ...)
 end -- MI2_OnEvent

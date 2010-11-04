@@ -541,7 +541,7 @@ function MI2_OptionParse( self, optionName, optionData, param )
 		local actionHandlerName = "MI2_SlashAction_"..optionName
 		local actionHandler = _G[actionHandlerName]
 		if  actionHandler  then
-			actionHandler()
+			actionHandler(self)
 			updateOptions = true -- for AllOn, AllOff, etc.
 		end
 	end
